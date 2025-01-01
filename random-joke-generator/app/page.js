@@ -32,26 +32,35 @@ export default function Home() {
     fetchJoke();
   }, []);
 
-  const { id, icon_url, url, value, created_at } = joke;
+  if (loading) {
+    return <div className={styles.loading}>Loading...</div>;
+  }
 
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <div key={id}>
-          <div className={styles.grid}>
-            <h1 className={styles.title}>Random Chuck Norris Jokes</h1>
-            <img src={icon_url} alt={url} />
+  // Only destructure joke if it has data
+  if (joke) {
+    const { id, icon_url, url, value, created_at } = joke;
+
+    return (
+      <div className={styles.page}>
+        <main className={styles.main}>
+          <div key={id}>
+            <div className={styles.grid}>
+              <h1 className={styles.title}>Random Chuck Norris Jokes</h1>
+              <img src={icon_url} alt={url} />
+            </div>
+            <p className={styles.description}>{value}</p>
+            <p style={{ textAlign: "center" }}>
+              Created At:{" "}
+              {moment(`${created_at}`).format("MMMM Do YYYY hh:mm:ss")}
+            </p>
           </div>
-          <p className={styles.description}>{value}</p>
-          <p style={{ textAlign: "center" }}>
-            Created At:{" "}
-            {moment(`${created_at}`).format("MMMM Do YYYY hh:mm:ss")}
-          </p>
-        </div>
-        <button className={styles.button} onClick={fetchJoke}>
-          Next Joke
-        </button>
-      </main>
-    </div>
-  );
+          <button className={styles.button} onClick={fetchJoke}>
+            Next Joke
+          </button>
+        </main>
+      </div>
+    );
+  }
+
+  return null; // If joke is still null (fallback)
 }
